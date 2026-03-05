@@ -167,19 +167,20 @@ if(selectedPhotos.length >= 4){
 alert("Maximum 4 photos");
 return;
 }
-
 selectedPhotos.push(id);
-
 }
-
 updateNumbers();
-
+/* update preview otomatis */
+if(selectedPhotos.length === 4 && selectedFrame){
+previewStrip();
+}
+if(selectedPhotos.length < 4){
+clearPreview();
+}
 });
-
+  
 selectGallery.appendChild(wrapper);
-
 });
-
 }
 
 
@@ -233,17 +234,21 @@ frames.forEach(frame=>{
 let img=document.createElement("img");
 img.src=frame;
 img.addEventListener("click",()=>{
+
 selectedFrame = frame;
+
 document.querySelectorAll("#frameSelector img")
 .forEach(f=>f.classList.remove("frameSelected"));
-img.classList.add("frameSelected");
-previewStrip(); // update preview otomatis
-});
 
-frameSelector.appendChild(img);
-});
+img.classList.add("frameSelected");
+
+/* update preview otomatis */
+
+if(selectedPhotos.length === 4){
+previewStrip();
 }
 
+});
 /* =====================================
    PHOTOSTRIP GENERATOR
 ===================================== */
@@ -409,5 +414,13 @@ canvas.height
 }
 
 frame.src = selectedFrame;
+
+}
+function clearPreview(){
+
+let canvas = document.getElementById("previewCanvas");
+let ctx = canvas.getContext("2d");
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
 
 }
