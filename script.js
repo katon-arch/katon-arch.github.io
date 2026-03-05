@@ -278,10 +278,12 @@ ctx.drawImage(img,0,index*900,1200,900);
 loaded++;
 
 if(loaded === 4){
-addFrame();
+
+drawFrame();
+
 }
 
-};
+}
 
 img.src = photos[id];
 
@@ -374,5 +376,29 @@ ctx.drawImage(frame,0,0,300,900);
 }
 
 frame.src=selectedFrame;
+
+}
+
+function drawFrame(){
+
+let canvas = document.getElementById("canvas");
+let ctx = canvas.getContext("2d");
+
+let frame = new Image();
+
+frame.onload = function(){
+
+ctx.drawImage(frame,0,0,1200,3600);
+
+let data = canvas.toDataURL("image/png");
+
+let link = document.getElementById("downloadBtn");
+
+link.href = data;
+link.style.display = "inline-block";
+
+}
+
+frame.src = selectedFrame;
 
 }
