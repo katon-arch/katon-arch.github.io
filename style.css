@@ -1,219 +1,119 @@
-/* ===== GLOBAL ===== */
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
 
 body{
-margin:0;
-font-family:Arial, Helvetica, sans-serif;
-background:#111;
-color:white;
-text-align:center;
+background:linear-gradient(135deg,#e9edf3,#efe9f6);
 }
 
-h1,h2{
-margin-top:10px;
-}
+/* HEADER */
 
-/* ================= LANDING PAGE ================= */
-
-.landing{
-height:100vh;
+.topbar{
 display:flex;
-align-items:center;
-justify-content:center;
-
-background:linear-gradient(
-135deg,
-#e9edf3,
-#f4f4f8,
-#efe9f6
-);
+justify-content:space-between;
+padding:15px 25px;
 }
 
-.landing-container{
-text-align:center;
-max-width:500px;
+.logo{
+color:#8a5cff;
+}
+
+/* LAYOUT */
+
+.boothLayout{
+display:flex;
+gap:20px;
 padding:20px;
 }
 
-/* icon */
+/* CAMERA */
 
-.logo-icon{
-font-size:40px;
+.cameraArea{
+flex:2;
 background:white;
+border-radius:20px;
+overflow:hidden;
+display:flex;
+flex-direction:column;
+position:relative;
+}
+
+#video{
+width:100%;
+flex:1;
+object-fit:cover;
+}
+
+/* COUNTDOWN */
+
+#countdown{
+
+position:absolute;
+
+top:50%;
+left:50%;
+
+transform:translate(-50%,-50%);
+
+font-size:120px;
+font-weight:bold;
+
+color:white;
+
+text-shadow:0 5px 20px rgba(0,0,0,0.5);
+
+pointer-events:none;
+
+}
+
+/* CONTROLS */
+
+.cameraControls{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:40px;
+padding:20px;
+}
+
+.captureBtn{
 width:70px;
 height:70px;
+border-radius:50%;
+border:none;
+cursor:pointer;
+background:linear-gradient(135deg,#8a5cff,#ff4da6);
+}
+
+/* PREVIEW */
+
+.previewPanel{
+width:320px;
+background:#f5f5f7;
+border-radius:20px;
+padding:20px;
 display:flex;
+flex-direction:column;
 align-items:center;
-justify-content:center;
-margin:auto;
-border-radius:18px;
-box-shadow:0 10px 30px rgba(0,0,0,0.1);
+}
+
+#previewCanvas{
+background:white;
+border-radius:12px;
 margin-bottom:20px;
 }
 
-/* title */
+/* DOWNLOAD */
 
-.title{
-font-size:48px;
-font-weight:700;
-margin:10px 0;
-background:linear-gradient(90deg,#8a5cff,#ff4da6);
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
-}
-
-.title span{
-font-weight:800;
-}
-
-/* subtitle */
-
-.subtitle{
-color:#6b7280;
-font-size:16px;
-margin-bottom:30px;
-}
-
-/* button */
-
-.start-btn{
-background:#0f172a;
-color:white;
-font-size:18px;
-padding:14px 28px;
+.downloadBtn{
+width:100%;
+padding:12px;
 border:none;
-border-radius:40px;
-cursor:pointer;
-box-shadow:0 8px 20px rgba(0,0,0,0.15);
-transition:0.2s;
-}
-
-.start-btn:hover{
-transform:scale(1.05);
-}
-/* ===== BUTTON ===== */
-
-button{
-font-size:20px;
-padding:12px 20px;
-margin:8px;
-border:none;
-border-radius:8px;
-background:#00ff88;
-color:black;
-cursor:pointer;
-transition:0.2s;
-}
-
-button:hover{
-transform:scale(1.05);
-}
-
-/* ===== VIDEO CAMERA ===== */
-
-#video{
-width:90%;
-max-width:500px;
-border-radius:10px;
-margin-top:10px;
-}
-
-/* ===== TIMER ===== */
-
-#timer{
-font-size:30px;
-font-weight:bold;
-margin:10px;
-}
-
-/* ===== GALLERY ===== */
-
-#gallery img{
-width:80px;
-margin:5px;
-border-radius:6px;
-}
-
-/* ===== SELECT PHOTO AREA ===== */
-
-#selectGallery{
-margin-top:10px;
-}
-
-/* wrapper supaya angka bisa berada di atas foto */
-
-.photoWrapper{
-position:relative;
-display:inline-block;
-margin:6px;
-}
-
-/* foto thumbnail */
-
-#selectGallery img{
-width:90px;
-border-radius:8px;
-cursor:pointer;
-border:4px solid transparent;
-transition:0.2s;
-}
-
-/* highlight foto terpilih */
-
-#selectGallery img.selected{
-border-color:#00ff88;
-box-shadow:0 0 12px #00ff88;
-transform:scale(1.05);
-}
-
-/* angka urutan foto */
-
-.photoNumber{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-font-size:42px;
-font-weight:bold;
+border-radius:12px;
+background:#6b7280;
 color:white;
-background:rgba(0,0,0,0.5);
-padding:10px 15px;
-border-radius:50%;
-display:none;
-pointer-events:none;
-}
-
-/* ===== FRAME SELECTOR ===== */
-
-#frameSelector img{
-width:100px;
-margin:6px;
-border-radius:8px;
 cursor:pointer;
-border:4px solid transparent;
-}
-
-#frameSelector img.frameSelected{
-border-color:#00ff88;
-box-shadow:0 0 10px #00ff88;
-}
-
-/* ===== DOWNLOAD BUTTON ===== */
-#generateBtn{
-font-size:22px;
-padding:14px 22px;
-background:#ffd500;
-color:black;
-border-radius:10px;
-margin-top:10px;
-cursor:pointer;
-}
-#downloadBtn{
-display:inline-block;
-margin-top:15px;
-font-size:22px;
-background:#ffd500;
-color:black;
-padding:12px 20px;
-border-radius:10px;
-text-decoration:none;
 }
