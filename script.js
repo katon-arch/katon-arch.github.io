@@ -336,69 +336,75 @@ alert("Select frame first");
 return;
 }
 
-let canvas=document.getElementById("previewCanvas");
-let ctx=canvas.getContext("2d");
+let canvas = document.getElementById("previewCanvas");
+let ctx = canvas.getContext("2d");
 
 ctx.clearRect(0,0,canvas.width,canvas.height);
 
-let loaded=0;
+const finalWidth = 1200;
+const previewWidth = canvas.width;
+
+const scale = previewWidth / finalWidth;
+
+/* posisi dan ukuran foto asli */
+
+const startX = 95 * scale;
+const startY = 220 * scale;
+
+const photoWidth = 1000 * scale;
+const photoHeight = 600 * scale;
+
+let loaded = 0;
 
 selectedPhotos.forEach((id,index)=>{
 
-let img=new Image();
+let img = new Image();
 
-img.onload=function(){
+img.onload = function(){
 
-ctx.drawImage(img,0,index*225,300,225);
+ctx.drawImage(
+img,
+startX,
+startY + index * photoHeight,
+photoWidth,
+photoHeight
+);
 
 loaded++;
 
-if(loaded===4){
-addPreviewFrame();
+if(loaded === 4){
+drawPreviewFrame();
 }
 
 }
 
-img.src=photos[id];
+img.src = photos[id];
 
 });
 
 }
 
-function addPreviewFrame(){
 
-let canvas=document.getElementById("previewCanvas");
-let ctx=canvas.getContext("2d");
+/* =====================================
+   DRAW FRAME ON PREVIEW
+===================================== */
 
-let frame=new Image();
+function drawPreviewFrame(){
 
-frame.onload=function(){
-
-ctx.drawImage(frame,0,0,300,900);
-
-}
-
-frame.src=selectedFrame;
-
-}
-
-function drawFrame(){
-
-let canvas = document.getElementById("canvas");
+let canvas = document.getElementById("previewCanvas");
 let ctx = canvas.getContext("2d");
 
 let frame = new Image();
 
 frame.onload = function(){
 
-ctx.drawImage(frame,0,0,1200,3600);
-
-let data = canvas.toDataURL("image/png");
-
-let link = document.getElementById("downloadBtn");
-
-link.href = data;
-link.style.display = "inline-block";
+ctx.drawImage(
+frame,
+0,
+0,
+canvas.width,
+canvas.height
+);
 
 }
 
