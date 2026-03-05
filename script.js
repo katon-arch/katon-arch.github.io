@@ -65,10 +65,12 @@ location.reload();
 
 }
 
+document.getElementById("generateBtn").onclick = generateStrip;
+
 function generateStrip(){
 
 if(photos.length < 4){
-alert("Take at least 4 photos");
+alert("Take at least 4 photos first");
 return;
 }
 
@@ -77,7 +79,9 @@ let ctx = canvas.getContext("2d");
 
 let selectedPhotos = photos.slice(-4);
 
-let loaded = 0;
+let imagesLoaded = 0;
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
 
 selectedPhotos.forEach((src,index)=>{
 
@@ -85,17 +89,11 @@ let img = new Image();
 
 img.onload = function(){
 
-ctx.drawImage(
-img,
-0,
-index*900,
-1200,
-900
-);
+ctx.drawImage(img,0,index*900,1200,900);
 
-loaded++;
+imagesLoaded++;
 
-if(loaded === 4){
+if(imagesLoaded === 4){
 addFrame();
 }
 
@@ -104,6 +102,31 @@ addFrame();
 img.src = src;
 
 });
+
+}
+
+function addFrame(){
+
+let canvas = document.getElementById("stripCanvas");
+let ctx = canvas.getContext("2d");
+
+let frame = new Image();
+
+frame.onload = function(){
+
+ctx.drawImage(frame,0,0,1200,3600);
+
+let dataURL = canvas.toDataURL("image/png");
+
+let downloadBtn = document.getElementById("downloadBtn");
+
+downloadBtn.href = dataURL;
+downloadBtn.style.display="block";
+downloadBtn.innerText="DOWNLOAD PHOTO";
+
+}
+
+frame.src = "frames/frame1.png";
 
 }
 
