@@ -208,13 +208,14 @@ function renderSelectGallery(){
 selectGallery.innerHTML="";
 selectedPhotos=[];
 
-photos.forEach((photo)=>{
+photos.forEach((photo,index)=>{
 
 let wrapper=document.createElement("div");
 wrapper.className="photoWrapper";
 
 let img=document.createElement("img");
 img.src=photo;
+img.dataset.id=index;
 
 let number=document.createElement("div");
 number.className="photoNumber";
@@ -225,9 +226,11 @@ wrapper.appendChild(number);
 
 img.addEventListener("click",()=>{
 
-if(selectedPhotos.includes(photo)){
+let id = img.dataset.id;
 
-selectedPhotos = selectedPhotos.filter(p=>p!==photo);
+if(selectedPhotos.includes(id)){
+
+selectedPhotos = selectedPhotos.filter(p=>p!==id);
 
 }else{
 
@@ -236,7 +239,7 @@ alert("Maximum 4 photos");
 return;
 }
 
-selectedPhotos.push(photo);
+selectedPhotos.push(id);
 
 }
 
@@ -259,13 +262,14 @@ wrappers.forEach(w=>{
 let img=w.querySelector("img");
 let number=w.querySelector(".photoNumber");
 
-let index=selectedPhotos.indexOf(img.src);
+let id = img.dataset.id;
+
+let index = selectedPhotos.indexOf(id);
 
 if(index!==-1){
 
 number.innerText=index+1;
 number.style.display="block";
-
 img.classList.add("selected");
 
 }else{
