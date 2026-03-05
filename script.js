@@ -271,50 +271,51 @@ frameSelector.appendChild(img);
 
 function previewStrip(){
 
-let canvas=document.getElementById("previewCanvas");
-let ctx=canvas.getContext("2d");
+let canvas = document.getElementById("previewCanvas");
+let ctx = canvas.getContext("2d");
 
 ctx.clearRect(0,0,canvas.width,canvas.height);
 
-const finalWidth = 1200;
-const scale = canvas.width / finalWidth;
+const scale = canvas.width / 1200;
 
-const startX = 95 * scale;
-const startY = 220 * scale;
+const positions = [
+{ x:95.2, y:222.9 },
+{ x:95.2, y:871.4 },
+{ x:95.2, y:1520 },
+{ x:95.2, y:2168.6 }
+];
 
-const photoWidth = 1000 * scale;
-const photoHeight = 600 * scale;
-
-let loaded=0;
+let loaded = 0;
 
 selectedPhotos.forEach((id,index)=>{
 
-let img=new Image();
+let img = new Image();
 
-img.onload=function(){
+img.onload = function(){
+
+let pos = positions[index];
 
 ctx.drawImage(
 img,
-startX,
-startY + index*photoHeight,
-photoWidth,
-photoHeight
+pos.x * scale,
+pos.y * scale,
+1000 * scale,
+600 * scale
 );
 
 loaded++;
 
-if(loaded===4){
+if(loaded === 4){
 drawPreviewFrame();
 }
 
 }
 
-img.src=photos[id];
+img.src = photos[id];
 
 });
 
 }
-
 function drawPreviewFrame(){
 
 let canvas=document.getElementById("previewCanvas");
@@ -346,38 +347,23 @@ ctx.clearRect(0,0,canvas.width,canvas.height);
    FINAL PHOTOSTRIP GENERATOR
 ===================================== */
 
-function generateStrip(){
+function previewStrip(){
 
-if(selectedPhotos.length!==4){
-alert("Select 4 photos");
-return;
-}
-
-if(!selectedFrame){
-alert("Select frame");
-return;
-}
-
-let canvas=document.getElementById("canvas");
-let ctx=canvas.getContext("2d");
+let canvas = document.getElementById("previewCanvas");
+let ctx = canvas.getContext("2d");
 
 ctx.clearRect(0,0,canvas.width,canvas.height);
 
-/* =====================================
-   PHOTO LAYOUT POSITION
-===================================== */
+const scale = canvas.width / 1200;
 
-const photoLayout = [
-{ x:95.2, y:229.9, width:1000, height:600 },
-{ x:95.2, y:871.4, width:1000, height:600 },
-{ x:95.2, y:1520, width:1000, height:600 },
-{ x:95.2, y:2168, width:1000, height:600 }
+const positions = [
+{ x:95.2, y:222.9 },
+{ x:95.2, y:871.4 },
+{ x:95.2, y:1520 },
+{ x:95.2, y:2168.6 }
 ];
-ctx.drawImage(img, 95.2, 222.9, 1000, 600)
-ctx.drawImage(img, 95.2, 871.4, 1000, 600)
-ctx.drawImage(img, 95.2, 1520, 1000, 600)
-ctx.drawImage(img, 95.2, 2168.6, 1000, 600);
-let loaded=0;
+
+let loaded = 0;
 
 selectedPhotos.forEach((id,index)=>{
 
@@ -385,20 +371,20 @@ let img = new Image();
 
 img.onload = function(){
 
-let layout = photoLayout[index];
+let pos = positions[index];
 
 ctx.drawImage(
 img,
-layout.x,
-layout.y,
-layout.width,
-layout.height
+pos.x * scale,
+pos.y * scale,
+1000 * scale,
+600 * scale
 );
 
 loaded++;
 
 if(loaded === 4){
-drawFrame();
+drawPreviewFrame();
 }
 
 }
@@ -408,7 +394,6 @@ img.src = photos[id];
 });
 
 }
-
 function drawFrame(){
 
 let canvas=document.getElementById("canvas");
