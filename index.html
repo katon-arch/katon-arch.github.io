@@ -4,109 +4,68 @@
 <head>
 
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Photobooth</title>
+<title>Arka PhotoBooth</title>
 
 <link rel="stylesheet" href="style.css">
 
 </head>
 
-
 <body>
 
+<section id="boothPage">
 
-<!-- ================= START SCREEN ================= -->
+<header class="topbar">
 
-<section id="startScreen" class="landing">
+<h2 class="logo">Arka PhotoBooth</h2>
 
-<div class="landing-container">
-
-<div class="logo-icon">
-✨
+<div class="sessionInfo">
+<span id="photoCount">0 / 4 Photos</span>
 </div>
 
-<h1 class="title">
-Arka <span>PhotoBooth</span>
-</h1>
-
-<p class="subtitle">
-Capture your best moments with our modern, AI-powered photobooth experience.
-</p>
-
-<button class="start-btn" onclick="startSession()">
-
-📷 Start Photobooth
-
-</button>
-
-</div>
-
-</section>
+</header>
 
 
+<div class="boothLayout">
 
-<!-- ================= CAMERA BOOTH ================= -->
+<!-- CAMERA -->
 
-<section id="booth" style="display:none">
-
-<div id="timer">
-05:00
-</div>
+<div class="cameraArea">
 
 <video id="video" autoplay playsinline></video>
 
-<div>
+<div id="countdown"></div>
 
-<button onclick="takePhoto()">
-CAPTURE
-</button>
+<div class="cameraControls">
 
-<button onclick="retakeAll()">
-RETAKE ALL
-</button>
+<button onclick="retakeAll()">↻</button>
 
-<button onclick="goSelect()">
-NEXT
+<button class="captureBtn" onclick="startCountdown()"></button>
+
+</div>
+
+</div>
+
+
+<!-- PREVIEW PANEL -->
+
+<div class="previewPanel">
+
+<canvas id="previewCanvas" width="300" height="900"></canvas>
+
+<button onclick="generateStrip()" class="downloadBtn">
+Download Strip
 </button>
 
 </div>
 
-<div id="gallery"></div>
-
-</section>
-
-
-
-<!-- ================= PHOTO SELECT SCREEN ================= -->
-
-<section id="selectScreen" style="display:none">
-
-<h2>Select 4 Photos</h2>
-<div id="selectGallery"></div>
-  
-<h2>Select Frame</h2>
-
-<div id="frameSelector"></div>
-
-<h2>Preview</h2>
-
-<canvas id="previewCanvas" width="300" height="900"></canvas>
-
-<br>
-
-<button id="generateBtn" onclick="generateStrip()">
-GENERATE IMAGE
-</button>
-
-<br>
-
-<a id="downloadBtn" download="photostrip.png" style="display:none">
-DOWNLOAD PHOTO
-</a>
+</div>
 
 <canvas id="canvas" width="1200" height="3600" style="display:none"></canvas>
+
+<a id="downloadLink" download="photostrip.png"></a>
+
 </section>
 
 <script src="script.js"></script>
