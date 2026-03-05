@@ -245,6 +245,36 @@ selectGallery.appendChild(wrapper);
 });
 
 }
+  
+function updateNumbers(){
+
+let wrappers=document.querySelectorAll(".photoWrapper");
+
+wrappers.forEach(w=>{
+
+let img=w.querySelector("img");
+let number=w.querySelector(".photoNumber");
+
+let index=selectedPhotos.indexOf(img.src);
+
+if(index!==-1){
+
+number.innerText=index+1;
+number.style.display="block";
+
+img.classList.add("selected");
+
+}else{
+
+number.style.display="none";
+img.classList.remove("selected");
+
+}
+
+});
+
+}
+  
 function renderFrames(){
 
 let frameSelector=document.getElementById("frameSelector");
