@@ -226,36 +226,23 @@ updateNumbers();
 /* =====================================
    FRAME SELECTOR
 ===================================== */
-
 function renderFrames(){
-
 let frameSelector = document.getElementById("frameSelector");
-
 frameSelector.innerHTML="";
-
 frames.forEach(frame=>{
-
 let img=document.createElement("img");
-
 img.src=frame;
-
 img.addEventListener("click",()=>{
-
 selectedFrame = frame;
-
 document.querySelectorAll("#frameSelector img")
 .forEach(f=>f.classList.remove("frameSelected"));
-
 img.classList.add("frameSelected");
-
+previewStrip(); // update preview otomatis
 });
 
 frameSelector.appendChild(img);
-
 });
-
 }
-
 
 /* =====================================
    PHOTOSTRIP GENERATOR
