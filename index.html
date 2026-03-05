@@ -88,6 +88,10 @@ margin:10px;
 
 <div id="selectGallery"></div>
 
+<button onclick="clearSelection()">
+CLEAR SELECTION
+</button>
+
 <h2>Select Frame</h2>
 
 <div id="frameSelector"></div>
@@ -365,4 +369,22 @@ frame.src=selectedFrame;
 
 }
 
+function clearSelection(){
+
+selectedPhotos = [];
+
+let wrappers=document.querySelectorAll(".photoWrapper");
+
+wrappers.forEach(w=>{
+
+let img=w.querySelector("img");
+let number=w.querySelector(".photoNumber");
+
+img.classList.remove("selected");
+
+number.style.display="none";
+
+});
+
+}
 </script>
