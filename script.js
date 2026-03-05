@@ -273,10 +273,10 @@ let img = new Image();
 
 img.onload = function(){
 
-ctx.drawImage(img, 95, 200, 1000, 600)
-ctx.drawImage(img, 95, 875, 1000, 600)
-ctx.drawImage(img, 95, 1500, 1000, 600)
-ctx.drawImage(img, 95, 2160, 1000, 600);
+ctx.drawImage(img, 95.2, 222.9, 1000, 600)
+ctx.drawImage(img, 95.2, 871.4, 1000, 600)
+ctx.drawImage(img, 95.2, 1520, 1000, 600)
+ctx.drawImage(img, 95.2, 2168.6, 1000, 600);
 
 loaded++;
 
