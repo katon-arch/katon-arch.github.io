@@ -64,3 +64,70 @@ location.reload();
 },1000)
 
 }
+
+function generateStrip(){
+
+if(photos.length < 4){
+alert("Take at least 4 photos");
+return;
+}
+
+let canvas = document.getElementById("stripCanvas");
+let ctx = canvas.getContext("2d");
+
+let selectedPhotos = photos.slice(-4);
+
+let loaded = 0;
+
+selectedPhotos.forEach((src,index)=>{
+
+let img = new Image();
+
+img.onload = function(){
+
+ctx.drawImage(
+img,
+0,
+index*900,
+1200,
+900
+);
+
+loaded++;
+
+if(loaded === 4){
+addFrame();
+}
+
+}
+
+img.src = src;
+
+});
+
+}
+
+function addFrame(){
+
+let canvas = document.getElementById("stripCanvas");
+let ctx = canvas.getContext("2d");
+
+let frame = new Image();
+
+frame.onload = function(){
+
+ctx.drawImage(frame,0,0,1200,3600);
+
+let dataURL = canvas.toDataURL("image/png");
+
+let downloadBtn = document.getElementById("downloadBtn");
+
+downloadBtn.href = dataURL;
+downloadBtn.style.display="block";
+downloadBtn.innerText="DOWNLOAD PHOTO";
+
+}
+
+frame.src = "frames/frame1.png";
+
+}
