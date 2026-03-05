@@ -359,8 +359,8 @@ alert("Select frame first");
 return;
 }
 
-let canvas = document.getElementById("canvas");
-let ctx = canvas.getContext("2d");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
 ctx.clearRect(0,0,canvas.width,canvas.height);
 
@@ -375,11 +375,11 @@ let loaded = 0;
 
 selectedPhotos.forEach((id,index)=>{
 
-let img = new Image();
+const img = new Image();
 
 img.onload = function(){
 
-let pos = positions[index];
+const pos = positions[index];
 
 ctx.drawImage(
 img,
@@ -394,32 +394,35 @@ loaded++;
 if(loaded === 4){
 drawFrame();
 }
+
 };
 
 img.src = photos[id];
+
 });
+
 }
 
 function drawFrame(){
 
-let canvas=document.getElementById("canvas");
-let ctx=canvas.getContext("2d");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
-let frame=new Image();
+const frame = new Image();
 
-frame.onload=function(){
+frame.onload = function(){
 
 ctx.drawImage(frame,0,0,canvas.width,canvas.height);
 
-let data=canvas.toDataURL("image/png");
+const data = canvas.toDataURL("image/png");
 
-let link=document.getElementById("downloadBtn");
+const link = document.getElementById("downloadBtn");
 
-link.href=data;
-link.style.display="inline-block";
+link.href = data;
+link.style.display = "inline-block";
 
-}
+};
 
-frame.src=selectedFrame;
+frame.src = selectedFrame;
 
 }
