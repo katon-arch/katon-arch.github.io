@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Photobooth</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="startScreen">
+<h1>Photobooth</h1>
+<button onclick="startSession()">TAP TO START</button>
+</div>
+
+<div id="cameraScreen" style="display:none">
+<div id="timer">05:00</div>
+
+<video id="video" autoplay></video>
+
+<button id="captureBtn">CAPTURE</button>
+<button id="retakeBtn">RETAKE ALL</button>
+
+<div id="gallery"></div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
