@@ -347,14 +347,22 @@ ctx.clearRect(0,0,canvas.width,canvas.height);
    FINAL PHOTOSTRIP GENERATOR
 ===================================== */
 
-function previewStrip(){
+function generateStrip(){
 
-let canvas = document.getElementById("previewCanvas");
+if(selectedPhotos.length !== 4){
+alert("Select 4 photos");
+return;
+}
+
+if(!selectedFrame){
+alert("Select frame first");
+return;
+}
+
+let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
 
 ctx.clearRect(0,0,canvas.width,canvas.height);
-
-const scale = canvas.width / 1200;
 
 const positions = [
 { x:95.2, y:222.9 },
@@ -375,25 +383,23 @@ let pos = positions[index];
 
 ctx.drawImage(
 img,
-pos.x * scale,
-pos.y * scale,
-1000 * scale,
-600 * scale
+pos.x,
+pos.y,
+1000,
+600
 );
 
 loaded++;
 
 if(loaded === 4){
-drawPreviewFrame();
+drawFrame();
 }
-
-}
+};
 
 img.src = photos[id];
-
 });
-
 }
+
 function drawFrame(){
 
 let canvas=document.getElementById("canvas");
