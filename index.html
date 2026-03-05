@@ -2,38 +2,225 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Photobooth</title>
-<link rel="stylesheet" href="style.css">
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#111;
+color:white;
+text-align:center;
+}
+
+button{
+font-size:22px;
+padding:15px 25px;
+margin:10px;
+border:none;
+border-radius:10px;
+}
+
+#video{
+width:90%;
+max-width:600px;
+border-radius:10px;
+}
+
+#gallery img{
+width:80px;
+margin:5px;
+border-radius:5px;
+}
+
+#timer{
+font-size:30px;
+margin:10px;
+}
+
+</style>
+
 </head>
 
 <body>
 
 <div id="startScreen">
+
 <h1>Photobooth</h1>
-<button onclick="startSession()">TAP TO START</button>
+
+<button onclick="startSession()">
+TAP TO START
+</button>
+
 </div>
 
-<div id="cameraScreen" style="display:none">
+<div id="booth" style="display:none">
+
 <div id="timer">05:00</div>
 
-<video id="video" autoplay></video>
+<video id="video" autoplay playsinline></video>
 
-<button id="captureBtn">CAPTURE</button>
-<button id="retakeBtn">RETAKE ALL</button>
+<br>
+
+<button onclick="takePhoto()">CAPTURE</button>
+
+<button onclick="retakeAll()">RETAKE ALL</button>
+
+<button onclick="generateStrip()">GENERATE PHOTO</button>
 
 <div id="gallery"></div>
 
-<button id="generateBtn">GENERATE PHOTO</button>
+<br>
 
-<canvas id="stripCanvas" width="1200" height="3600" style="display:none"></canvas>
-
-<a id="downloadBtn" download="photostrip.png" style="display:none">
-Download Photo
+<a id="downloadBtn" style="display:none" download="photostrip.png">
+DOWNLOAD PHOTO
 </a>
-  
+
+<canvas id="canvas" width="1200" height="3600" style="display:none"></canvas>
+
 </div>
 
-<script src="script.js"></script>
+<script>
+
+let video = document.getElementById("video");
+let gallery = document.getElementById("gallery");
+let timerDisplay = document.getElementById("timer");
+
+let photos = [];
+
+let sessionTime = 300;
+
+navigator.mediaDevices.getUserMedia({video:true})
+.then(stream=>{
+video.srcObject = stream;
+});
+
+function startSession(){
+
+document.getElementById("startScreen").style.display="none";
+
+document.getElementById("booth").style.display="block";
+
+startTimer();
+
+}
+
+function takePhoto(){
+
+let canvas = document.createElement("canvas");
+
+canvas.width = video.videoWidth;
+
+canvas.height = video.videoHeight;
+
+let ctx = canvas.getContext("2d");
+
+ctx.drawImage(video,0,0);
+
+let img = canvas.toDataURL("image/png");
+
+photos.push(img);
+
+let image = document.createElement("img");
+
+image.src = img;
+
+gallery.appendChild(image);
+
+}
+
+function retakeAll(){
+
+if(!confirm("Delete all photos?")) return;
+
+photos = [];
+
+gallery.innerHTML="";
+
+}
+
+function startTimer(){
+
+let interval = setInterval(()=>{
+
+sessionTime--;
+
+let m = Math.floor(sessionTime/60);
+
+let s = sessionTime%60;
+
+timerDisplay.innerText =
+String(m).padStart(2,'0') + ":" +
+String(s).padStart(2,'0');
+
+if(sessionTime <= 0){
+
+clearInterval(interval);
+
+alert("Session End");
+
+location.reload();
+
+}
+
+},1000)
+
+}
+
+function generateStrip(){
+
+if(photos.length < 4){
+
+alert("Take at least 4 photos");
+
+return;
+
+}
+
+let canvas = document.getElementById("canvas");
+
+let ctx = canvas.getContext("2d");
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+let selected = photos.slice(-4);
+
+let loaded = 0;
+
+selected.forEach((src,index)=>{
+
+let img = new Image();
+
+img.onload = function(){
+
+ctx.drawImage(img,0,index*900,1200,900);
+
+loaded++;
+
+if(loaded===4){
+
+let data = canvas.toDataURL("image/png");
+
+let link = document.getElementById("downloadBtn");
+
+link.href = data;
+
+link.style.display="inline-block";
+
+}
+
+}
+
+img.src = src;
+
+});
+
+}
+
+</script>
 
 </body>
+
 </html>
