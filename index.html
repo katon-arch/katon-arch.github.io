@@ -1,75 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
+<section id="startScreen" class="landing">
 
-<head>
+<div class="landing-container">
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<div class="logo-icon">✨</div>
 
-<title>Arka PhotoBooth</title>
+<h1 class="title">
+Arka <span>PhotoBooth</span>
+</h1>
 
-<link rel="stylesheet" href="style.css">
+<p class="subtitle">
+Capture your best moments with our modern AI-powered photobooth experience.
+</p>
 
-</head>
-
-<body>
-
-<section id="boothPage">
-
-<header class="topbar">
-
-<h2 class="logo">Arka PhotoBooth</h2>
-
-<div class="sessionInfo">
-<span id="photoCount">0 / 4 Photos</span>
-</div>
-
-</header>
-
-
-<div class="boothLayout">
-
-<!-- CAMERA -->
-
-<div class="cameraArea">
-
-<video id="video" autoplay playsinline></video>
-
-<div id="countdown"></div>
-
-<div class="cameraControls">
-
-<button onclick="retakeAll()">↻</button>
-
-<button class="captureBtn" onclick="startCountdown()"></button>
-
-</div>
-
-</div>
-
-
-<!-- PREVIEW PANEL -->
-
-<div class="previewPanel">
-
-<canvas id="previewCanvas" width="300" height="900"></canvas>
-
-<button onclick="generateStrip()" class="downloadBtn">
-Download Strip
+<button class="start-btn" onclick="startSession()">
+📷 Start Photobooth
 </button>
 
 </div>
 
-</div>
-
-<canvas id="canvas" width="1200" height="3600" style="display:none"></canvas>
-
-<a id="downloadLink" download="photostrip.png"></a>
-
 </section>
-
-<script src="script.js"></script>
-
-</body>
-
-</html>
