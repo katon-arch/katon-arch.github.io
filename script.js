@@ -330,3 +330,62 @@ link.style.display = "inline-block";
 frame.src = selectedFrame;
 
 }
+
+/* ===== Preview Frame ======*/
+function previewStrip(){
+
+if(selectedPhotos.length !== 4){
+alert("Select 4 photos");
+return;
+}
+
+if(!selectedFrame){
+alert("Select frame first");
+return;
+}
+
+let canvas=document.getElementById("previewCanvas");
+let ctx=canvas.getContext("2d");
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+let loaded=0;
+
+selectedPhotos.forEach((id,index)=>{
+
+let img=new Image();
+
+img.onload=function(){
+
+ctx.drawImage(img,0,index*225,300,225);
+
+loaded++;
+
+if(loaded===4){
+addPreviewFrame();
+}
+
+}
+
+img.src=photos[id];
+
+});
+
+}
+
+function addPreviewFrame(){
+
+let canvas=document.getElementById("previewCanvas");
+let ctx=canvas.getContext("2d");
+
+let frame=new Image();
+
+frame.onload=function(){
+
+ctx.drawImage(frame,0,0,300,900);
+
+}
+
+frame.src=selectedFrame;
+
+}
