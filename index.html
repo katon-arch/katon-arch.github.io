@@ -262,14 +262,15 @@ wrappers.forEach(w=>{
 let img=w.querySelector("img");
 let number=w.querySelector(".photoNumber");
 
-let id = img.dataset.id;
+let id=img.dataset.id;
 
-let index = selectedPhotos.indexOf(id);
+let index=selectedPhotos.indexOf(id);
 
 if(index!==-1){
 
 number.innerText=index+1;
 number.style.display="block";
+
 img.classList.add("selected");
 
 }else{
