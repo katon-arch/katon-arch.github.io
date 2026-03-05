@@ -2,9 +2,9 @@
    GLOBAL VARIABLES
 ===================================== */
 
-let video = document.getElementById("video");
-let gallery = document.getElementById("gallery");
-let selectGallery = document.getElementById("selectGallery");
+const video = document.getElementById("video");
+const gallery = document.getElementById("gallery");
+const selectGallery = document.getElementById("selectGallery");
 
 let photos = [];
 let selectedPhotos = [];
@@ -26,7 +26,7 @@ navigator.mediaDevices.getUserMedia({video:true})
 .then(stream=>{
 video.srcObject = stream;
 })
-.catch(err=>{
+.catch(()=>{
 alert("Camera access denied");
 });
 
@@ -46,6 +46,8 @@ startTimer();
 
 function startTimer(){
 
+const timer = document.getElementById("timer");
+
 let interval = setInterval(()=>{
 
 sessionTime--;
@@ -53,14 +55,13 @@ sessionTime--;
 let minutes = Math.floor(sessionTime/60);
 let seconds = sessionTime%60;
 
-document.getElementById("timer").innerText =
-String(minutes).padStart(2,'0') + ":" +
+timer.innerText =
+String(minutes).padStart(2,'0')+":"+
 String(seconds).padStart(2,'0');
 
-if(sessionTime <= 0){
+if(sessionTime<=0){
 
 clearInterval(interval);
-
 alert("Session End");
 
 location.reload();
@@ -98,7 +99,6 @@ gallery.appendChild(image);
 
 }
 
-
 function retakeAll(){
 
 if(!confirm("Delete all photos?")) return;
@@ -110,12 +110,12 @@ gallery.innerHTML="";
 
 
 /* =====================================
-   GO TO SELECT SCREEN
+   NAVIGATION
 ===================================== */
 
 function goSelect(){
 
-if(photos.length === 0){
+if(photos.length===0){
 alert("Take some photos first");
 return;
 }
@@ -163,41 +163,36 @@ selectedPhotos = selectedPhotos.filter(p=>p!==id);
 
 }else{
 
-if(selectedPhotos.length >= 4){
+if(selectedPhotos.length>=4){
 alert("Maximum 4 photos");
 return;
 }
+
 selectedPhotos.push(id);
-}
-updateNumbers();
-/* update preview otomatis */
-if(selectedPhotos.length === 4 && selectedFrame){
-previewStrip();
-}
-if(selectedPhotos.length < 4){
-clearPreview();
-}
-});
-  
-selectGallery.appendChild(wrapper);
-});
+
 }
 
+updateNumbers();
+
+});
+
+selectGallery.appendChild(wrapper);
+
+});
+
+}
 
 function updateNumbers(){
 
-let wrappers=document.querySelectorAll(".photoWrapper");
+document.querySelectorAll(".photoWrapper").forEach(wrapper=>{
 
-wrappers.forEach(w=>{
+let img = wrapper.querySelector("img");
+let number = wrapper.querySelector(".photoNumber");
 
-let img=w.querySelector("img");
-let number=w.querySelector(".photoNumber");
-
-let id=img.dataset.id;
-
+let id = img.dataset.id;
 let index = selectedPhotos.indexOf(id);
 
-if(index !== -1){
+if(index!==-1){
 
 number.innerText=index+1;
 number.style.display="block";
@@ -213,8 +208,15 @@ img.classList.remove("selected");
 
 });
 
+/* update preview otomatis */
+
+if(selectedPhotos.length===4 && selectedFrame){
+previewStrip();
+}else{
+clearPreview();
 }
 
+}
 
 function clearSelection(){
 
@@ -227,12 +229,18 @@ updateNumbers();
 /* =====================================
    FRAME SELECTOR
 ===================================== */
+
 function renderFrames(){
-let frameSelector = document.getElementById("frameSelector");
+
+let frameSelector=document.getElementById("frameSelector");
+
 frameSelector.innerHTML="";
+
 frames.forEach(frame=>{
+
 let img=document.createElement("img");
 img.src=frame;
+
 img.addEventListener("click",()=>{
 
 selectedFrame = frame;
@@ -242,58 +250,15 @@ document.querySelectorAll("#frameSelector img")
 
 img.classList.add("frameSelected");
 
-/* update preview otomatis */
+/* update preview */
 
-if(selectedPhotos.length === 4){
+if(selectedPhotos.length===4){
 previewStrip();
 }
 
 });
-/* =====================================
-   PHOTOSTRIP GENERATOR
-===================================== */
 
-function generateStrip(){
-
-if(selectedPhotos.length !== 4){
-alert("Select 4 photos");
-return;
-}
-
-if(!selectedFrame){
-alert("Select frame first");
-return;
-}
-
-let canvas = document.getElementById("canvas");
-let ctx = canvas.getContext("2d");
-
-ctx.clearRect(0,0,canvas.width,canvas.height);
-
-let loaded = 0;
-
-selectedPhotos.forEach((id,index)=>{
-
-let img = new Image();
-
-img.onload = function(){
-
-ctx.drawImage(img, 95.2, 222.9, 1000, 600)
-ctx.drawImage(img, 95.2, 871.4, 1000, 600)
-ctx.drawImage(img, 95.2, 1520, 1000, 600)
-ctx.drawImage(img, 95.2, 2168.6, 1000, 600);
-
-loaded++;
-
-if(loaded === 4){
-
-drawFrame();
-
-}
-
-}
-
-img.src = photos[id];
+frameSelector.appendChild(img);
 
 });
 
@@ -301,57 +266,18 @@ img.src = photos[id];
 
 
 /* =====================================
-   ADD FRAME OVERLAY
+   PREVIEW SYSTEM
 ===================================== */
 
-function addFrame(){
-
-let canvas = document.getElementById("canvas");
-let ctx = canvas.getContext("2d");
-
-let frame = new Image();
-
-frame.onload = function(){
-
-ctx.drawImage(frame,0,0,1200,3600);
-
-let data = canvas.toDataURL("image/png");
-
-let link = document.getElementById("downloadBtn");
-
-link.href = data;
-link.style.display = "inline-block";
-
-};
-
-frame.src = selectedFrame;
-
-}
-
-/* ===== Preview Frame ======*/
 function previewStrip(){
 
-if(selectedPhotos.length !== 4){
-alert("Select 4 photos");
-return;
-}
-
-if(!selectedFrame){
-alert("Select frame first");
-return;
-}
-
-let canvas = document.getElementById("previewCanvas");
-let ctx = canvas.getContext("2d");
+let canvas=document.getElementById("previewCanvas");
+let ctx=canvas.getContext("2d");
 
 ctx.clearRect(0,0,canvas.width,canvas.height);
 
 const finalWidth = 1200;
-const previewWidth = canvas.width;
-
-const scale = previewWidth / finalWidth;
-
-/* posisi dan ukuran foto asli */
+const scale = canvas.width / finalWidth;
 
 const startX = 95 * scale;
 const startY = 220 * scale;
@@ -359,7 +285,99 @@ const startY = 220 * scale;
 const photoWidth = 1000 * scale;
 const photoHeight = 600 * scale;
 
-let loaded = 0;
+let loaded=0;
+
+selectedPhotos.forEach((id,index)=>{
+
+let img=new Image();
+
+img.onload=function(){
+
+ctx.drawImage(
+img,
+startX,
+startY + index*photoHeight,
+photoWidth,
+photoHeight
+);
+
+loaded++;
+
+if(loaded===4){
+drawPreviewFrame();
+}
+
+}
+
+img.src=photos[id];
+
+});
+
+}
+
+function drawPreviewFrame(){
+
+let canvas=document.getElementById("previewCanvas");
+let ctx=canvas.getContext("2d");
+
+let frame=new Image();
+
+frame.onload=function(){
+
+ctx.drawImage(frame,0,0,canvas.width,canvas.height);
+
+}
+
+frame.src=selectedFrame;
+
+}
+
+function clearPreview(){
+
+let canvas=document.getElementById("previewCanvas");
+let ctx=canvas.getContext("2d");
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+}
+
+
+/* =====================================
+   FINAL PHOTOSTRIP GENERATOR
+===================================== */
+
+function generateStrip(){
+
+if(selectedPhotos.length!==4){
+alert("Select 4 photos");
+return;
+}
+
+if(!selectedFrame){
+alert("Select frame");
+return;
+}
+
+let canvas=document.getElementById("canvas");
+let ctx=canvas.getContext("2d");
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+/* =====================================
+   PHOTO LAYOUT POSITION
+===================================== */
+
+const photoLayout = [
+{ x:95.2, y:229.9, width:1000, height:600 },
+{ x:95.2, y:871.4, width:1000, height:600 },
+{ x:95.2, y:1520, width:1000, height:600 },
+{ x:95.2, y:2168, width:1000, height:600 }
+];
+ctx.drawImage(img, 95.2, 222.9, 1000, 600)
+ctx.drawImage(img, 95.2, 871.4, 1000, 600)
+ctx.drawImage(img, 95.2, 1520, 1000, 600)
+ctx.drawImage(img, 95.2, 2168.6, 1000, 600);
+let loaded=0;
 
 selectedPhotos.forEach((id,index)=>{
 
@@ -367,18 +385,20 @@ let img = new Image();
 
 img.onload = function(){
 
+let layout = photoLayout[index];
+
 ctx.drawImage(
 img,
-startX,
-startY + index * photoHeight,
-photoWidth,
-photoHeight
+layout.x,
+layout.y,
+layout.width,
+layout.height
 );
 
 loaded++;
 
 if(loaded === 4){
-drawPreviewFrame();
+drawFrame();
 }
 
 }
@@ -389,38 +409,26 @@ img.src = photos[id];
 
 }
 
+function drawFrame(){
 
-/* =====================================
-   DRAW FRAME ON PREVIEW
-===================================== */
+let canvas=document.getElementById("canvas");
+let ctx=canvas.getContext("2d");
 
-function drawPreviewFrame(){
+let frame=new Image();
 
-let canvas = document.getElementById("previewCanvas");
-let ctx = canvas.getContext("2d");
+frame.onload=function(){
 
-let frame = new Image();
+ctx.drawImage(frame,0,0,canvas.width,canvas.height);
 
-frame.onload = function(){
+let data=canvas.toDataURL("image/png");
 
-ctx.drawImage(
-frame,
-0,
-0,
-canvas.width,
-canvas.height
-);
+let link=document.getElementById("downloadBtn");
+
+link.href=data;
+link.style.display="inline-block";
 
 }
 
-frame.src = selectedFrame;
-
-}
-function clearPreview(){
-
-let canvas = document.getElementById("previewCanvas");
-let ctx = canvas.getContext("2d");
-
-ctx.clearRect(0,0,canvas.width,canvas.height);
+frame.src=selectedFrame;
 
 }
