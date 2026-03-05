@@ -206,14 +206,23 @@ selectedPhotos=[];
 
 photos.forEach((photo)=>{
 
+let wrapper=document.createElement("div");
+wrapper.className="photoWrapper";
+
 let img=document.createElement("img");
 img.src=photo;
 
+let number=document.createElement("div");
+number.className="photoNumber";
+number.style.display="none";
+
+wrapper.appendChild(img);
+wrapper.appendChild(number);
+
 img.addEventListener("click",()=>{
 
-if(img.classList.contains("selected")){
+if(selectedPhotos.includes(photo)){
 
-img.classList.remove("selected");
 selectedPhotos = selectedPhotos.filter(p=>p!==photo);
 
 }else{
@@ -223,14 +232,15 @@ alert("Maximum 4 photos");
 return;
 }
 
-img.classList.add("selected");
 selectedPhotos.push(photo);
 
 }
 
+updateNumbers();
+
 });
 
-selectGallery.appendChild(img);
+selectGallery.appendChild(wrapper);
 
 });
 
