@@ -1,45 +1,47 @@
+/* =====================================
+   GLOBAL VARIABLES
+===================================== */
+
 let video = document.getElementById("video");
-let captureBtn = document.getElementById("captureBtn");
 let gallery = document.getElementById("gallery");
-let timerDisplay = document.getElementById("timer");
+let selectGallery = document.getElementById("selectGallery");
 
 let photos = [];
+let selectedPhotos = [];
+let selectedFrame = null;
+
 let sessionTime = 300;
+
+const frames = [
+"frames/frame1.png",
+"frames/frame2.png"
+];
+
+
+/* =====================================
+   CAMERA SETUP
+===================================== */
 
 navigator.mediaDevices.getUserMedia({video:true})
 .then(stream=>{
 video.srcObject = stream;
+})
+.catch(err=>{
+alert("Camera access denied");
 });
 
+
+/* =====================================
+   SESSION TIMER
+===================================== */
+
 function startSession(){
+
 document.getElementById("startScreen").style.display="none";
-document.getElementById("cameraScreen").style.display="block";
+document.getElementById("booth").style.display="block";
 
 startTimer();
-}
 
-captureBtn.onclick = function(){
-
-let canvas = document.createElement("canvas");
-canvas.width = video.videoWidth;
-canvas.height = video.videoHeight;
-
-let ctx = canvas.getContext("2d");
-ctx.drawImage(video,0,0);
-
-let img = canvas.toDataURL("image/png");
-
-photos.push(img);
-
-let image = document.createElement("img");
-image.src = img;
-
-gallery.appendChild(image);
-}
-
-document.getElementById("retakeBtn").onclick = function(){
-photos = [];
-gallery.innerHTML="";
 }
 
 function startTimer(){
@@ -51,39 +53,234 @@ sessionTime--;
 let minutes = Math.floor(sessionTime/60);
 let seconds = sessionTime%60;
 
-timerDisplay.innerText =
+document.getElementById("timer").innerText =
 String(minutes).padStart(2,'0') + ":" +
 String(seconds).padStart(2,'0');
 
 if(sessionTime <= 0){
+
 clearInterval(interval);
+
 alert("Session End");
+
 location.reload();
-}
-
-},1000)
 
 }
 
-document.getElementById("generateBtn").onclick = generateStrip;
+},1000);
 
-function generateStrip(){
+}
 
-if(photos.length < 4){
-alert("Take at least 4 photos first");
+
+/* =====================================
+   CAMERA ACTIONS
+===================================== */
+
+function takePhoto(){
+
+let canvas = document.createElement("canvas");
+
+canvas.width = video.videoWidth;
+canvas.height = video.videoHeight;
+
+let ctx = canvas.getContext("2d");
+
+ctx.drawImage(video,0,0);
+
+let img = canvas.toDataURL("image/png");
+
+photos.push(img);
+
+let image = document.createElement("img");
+image.src = img;
+
+gallery.appendChild(image);
+
+}
+
+
+function retakeAll(){
+
+if(!confirm("Delete all photos?")) return;
+
+photos = [];
+gallery.innerHTML="";
+
+}
+
+
+/* =====================================
+   GO TO SELECT SCREEN
+===================================== */
+
+function goSelect(){
+
+if(photos.length === 0){
+alert("Take some photos first");
 return;
 }
 
-let canvas = document.getElementById("stripCanvas");
+document.getElementById("booth").style.display="none";
+document.getElementById("selectScreen").style.display="block";
+
+renderSelectGallery();
+renderFrames();
+
+}
+
+
+/* =====================================
+   PHOTO SELECTION
+===================================== */
+
+function renderSelectGallery(){
+
+selectGallery.innerHTML="";
+selectedPhotos=[];
+
+photos.forEach((photo,index)=>{
+
+let wrapper=document.createElement("div");
+wrapper.className="photoWrapper";
+
+let img=document.createElement("img");
+img.src=photo;
+img.dataset.id=index;
+
+let number=document.createElement("div");
+number.className="photoNumber";
+
+wrapper.appendChild(img);
+wrapper.appendChild(number);
+
+img.addEventListener("click",()=>{
+
+let id = img.dataset.id;
+
+if(selectedPhotos.includes(id)){
+
+selectedPhotos = selectedPhotos.filter(p=>p!==id);
+
+}else{
+
+if(selectedPhotos.length >= 4){
+alert("Maximum 4 photos");
+return;
+}
+
+selectedPhotos.push(id);
+
+}
+
+updateNumbers();
+
+});
+
+selectGallery.appendChild(wrapper);
+
+});
+
+}
+
+
+function updateNumbers(){
+
+let wrappers=document.querySelectorAll(".photoWrapper");
+
+wrappers.forEach(w=>{
+
+let img=w.querySelector("img");
+let number=w.querySelector(".photoNumber");
+
+let id=img.dataset.id;
+
+let index = selectedPhotos.indexOf(id);
+
+if(index !== -1){
+
+number.innerText=index+1;
+number.style.display="block";
+
+img.classList.add("selected");
+
+}else{
+
+number.style.display="none";
+img.classList.remove("selected");
+
+}
+
+});
+
+}
+
+
+function clearSelection(){
+
+selectedPhotos=[];
+updateNumbers();
+
+}
+
+
+/* =====================================
+   FRAME SELECTOR
+===================================== */
+
+function renderFrames(){
+
+let frameSelector = document.getElementById("frameSelector");
+
+frameSelector.innerHTML="";
+
+frames.forEach(frame=>{
+
+let img=document.createElement("img");
+
+img.src=frame;
+
+img.addEventListener("click",()=>{
+
+selectedFrame = frame;
+
+document.querySelectorAll("#frameSelector img")
+.forEach(f=>f.classList.remove("frameSelected"));
+
+img.classList.add("frameSelected");
+
+});
+
+frameSelector.appendChild(img);
+
+});
+
+}
+
+
+/* =====================================
+   PHOTOSTRIP GENERATOR
+===================================== */
+
+function generateStrip(){
+
+if(selectedPhotos.length !== 4){
+alert("Select 4 photos");
+return;
+}
+
+if(!selectedFrame){
+alert("Select frame first");
+return;
+}
+
+let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
-
-let selectedPhotos = photos.slice(-4);
-
-let imagesLoaded = 0;
 
 ctx.clearRect(0,0,canvas.width,canvas.height);
 
-selectedPhotos.forEach((src,index)=>{
+let loaded = 0;
+
+selectedPhotos.forEach((id,index)=>{
 
 let img = new Image();
 
@@ -91,23 +288,28 @@ img.onload = function(){
 
 ctx.drawImage(img,0,index*900,1200,900);
 
-imagesLoaded++;
+loaded++;
 
-if(imagesLoaded === 4){
+if(loaded === 4){
 addFrame();
 }
 
-}
+};
 
-img.src = src;
+img.src = photos[id];
 
 });
 
 }
 
+
+/* =====================================
+   ADD FRAME OVERLAY
+===================================== */
+
 function addFrame(){
 
-let canvas = document.getElementById("stripCanvas");
+let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
 
 let frame = new Image();
@@ -116,41 +318,15 @@ frame.onload = function(){
 
 ctx.drawImage(frame,0,0,1200,3600);
 
-let dataURL = canvas.toDataURL("image/png");
+let data = canvas.toDataURL("image/png");
 
-let downloadBtn = document.getElementById("downloadBtn");
+let link = document.getElementById("downloadBtn");
 
-downloadBtn.href = dataURL;
-downloadBtn.style.display="block";
-downloadBtn.innerText="DOWNLOAD PHOTO";
+link.href = data;
+link.style.display = "inline-block";
 
-}
+};
 
-frame.src = "frames/frame1.png";
-
-}
-
-function addFrame(){
-
-let canvas = document.getElementById("stripCanvas");
-let ctx = canvas.getContext("2d");
-
-let frame = new Image();
-
-frame.onload = function(){
-
-ctx.drawImage(frame,0,0,1200,3600);
-
-let dataURL = canvas.toDataURL("image/png");
-
-let downloadBtn = document.getElementById("downloadBtn");
-
-downloadBtn.href = dataURL;
-downloadBtn.style.display="block";
-downloadBtn.innerText="DOWNLOAD PHOTO";
-
-}
-
-frame.src = "frames/frame1.png";
+frame.src = selectedFrame;
 
 }
