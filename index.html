@@ -71,36 +71,27 @@ NEXT
 <div id="selectGallery"></div>
   
 <h2>Select Frame</h2>
+
 <div id="frameSelector"></div>
-  
-<button onclick="clearSelection()">
-CLEAR SELECTION
-</button>
 
 <h2>Preview</h2>
+
 <canvas id="previewCanvas" width="300" height="900"></canvas>
 
 <br>
 
-<button onclick="previewStrip()">
-PREVIEW
+<button id="generateBtn" onclick="generateStrip()">
+GENERATE IMAGE
 </button>
 
-<button onclick="generateStrip()">
-GENERATE PHOTO
-</button>
-
+<br>
 
 <a id="downloadBtn" download="photostrip.png" style="display:none">
 DOWNLOAD PHOTO
 </a>
 
-
 <canvas id="canvas" width="1200" height="3600" style="display:none"></canvas>
-
 </section>
-
-
 
 <script src="script.js"></script>
 
